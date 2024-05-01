@@ -178,6 +178,8 @@ scale(1);
 .price{
     display: flex;
     justify-content: flex-start;
+    margin-top: 10px;
+    font-size: 14px;
 }
 .price span{
     margin-left: 5px;

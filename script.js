@@ -1,3 +1,4 @@
+calculatePrice()
 var phoneInput = document.querySelector('.phone')
 phoneInput.addEventListener('keydown', function(event) {
    if( !(event.key == 'ArrowLeft' ||  event.key == 'ArrowRight' ||  event.key == 'Backspace' || event.key == 'Tab')) { event.preventDefault() }
@@ -62,23 +63,25 @@ function popup_deactivate (){
 
 }
 function validateForm() {
-    let fullname = document.getElementById("fullname").value;
+    let firstName = document.getElementById("first-name").value;
     let surname = document.getElementById("surname").value;
     let phone = document.getElementById("phone").value;
     let dates = document.getElementById("book-date").value;
     let animals = document.getElementById("animals").value && document.getElementById("animals").value === 2
     let comment = document.getElementById("client-comment").value
-    if (fullname === "" || surname === "" || phone === "" || dates === "") {
+    let price = document.getElementById("price").value
+    if (firstName === "" || surname === "" || phone === "" || dates === "") {
       console.log("Пожалуйста, заполните все поля формы.");
       return false;
     } else {
         let data = {
-            fullname: fullname,
+            firstName: firstName,
             surname: surname,
             phone: phone,
             dates: dates,
             animals: animals,
             comment: comment,
+            price: price,
         };
 
         fetch('your-server-url', {
@@ -124,7 +127,7 @@ function checkAnimals(){
     let selectedValue = selectElement.value;
 
     let withAnimals
-    if (selectedValue === 1 ) {
+    if (selectedValue === "1" ) {
         withAnimals = false
     } else {
         withAnimals = true

@@ -3,7 +3,16 @@
     
 }
 
+.buttone.disabled {
+    pointer-events: none;
+    opacity: 0.6; 
+}
+.buttone.active {
+    pointer-events:all;
+    opacity: 1; 
+}
 body{
+    overflow: hidden;
     margin: 0;
     padding: 0;
     background-color: #3E708E;

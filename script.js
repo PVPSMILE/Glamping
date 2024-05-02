@@ -48,6 +48,20 @@ function calculatePrice() {
 
     console.log(price)
 }
+
+const checkbox = document.getElementById('accept_terms');
+const button = document.getElementById('submitBtn');
+
+    checkbox.addEventListener('change', function() {
+        if (this.checked) {
+            button.classList.remove('disabled');
+            button.classList.add('active');
+        } else {
+            button.classList.add('disabled');
+            button.classList.remove('active');
+        }
+});
+
 let popupBg = document.querySelector('.popup_bg');
 let popup = document.querySelector('.popup');
 let openPopupButtons = document.querySelectorAll('.open-popup');

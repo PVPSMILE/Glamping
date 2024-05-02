@@ -22,8 +22,8 @@ phoneInput.addEventListener('keydown', function(event) {
     } 
 });
 
-flatpickr( "#count_price",{
-    mode: "range",
+flatpickr( "#book-date",{
+    //mode: "range",
     minDate: "today",
     dateFormat: "Y-m-d",
     disable: [
@@ -34,30 +34,18 @@ flatpickr( "#count_price",{
     ]    
 });
 
-function countPrice() {
-    var obj = document.getElementById("count_price").value.toString();;
-    const price = 3000;
-    var price_out = document.getElementById("price_out");
-    price_out.innerHTML = (1+" день");
-    price_out2.innerHTML = (price+" грн.");
-    price_out.style.display = "block";
-    let dates = obj.split(" to ");
-    let data1 = new Date(dates[0]);
-    let data2 = new Date(dates[1]); 
-    let obj2 = (Math.round((data2.getTime() - data1.getTime()) / (1000 * 3600 * 24)) + 1);
+function calculatePrice() {
+    let price = 2500;
+    let isHoliday = checkIsHoliday()
+    let withAnimals = checkAnimals()
 
-    if (obj2 == "NaN"){
-        price_out.innerHTML = (1+" день");
-        price_out2.innerHTML = (price+" грн.");
-    }
-    else if (obj2 < 5) {
-        price_out.innerHTML = (obj2+" дні");
-        price_out2.innerHTML = (price*obj2+" грн.");
-    }
-    else if (obj2 > 5) {
-        price_out.innerHTML = (obj2+" днів");
-        price_out2.innerHTML = (price*obj2+" грн.");
-    } 
+    price = isHoliday ? price+500 : price
+    price = withAnimals ? price+300 : price
+
+    let el_price = document.getElementById("price")
+    el_price.innerHTML = (price+" грн.");
+
+    console.log(price)
 }
 let popupBg = document.querySelector('.popup_bg');
 let popup = document.querySelector('.popup');
@@ -74,19 +62,84 @@ function popup_deactivate (){
 
 }
 function validateForm() {
-    var fullname = document.getElementById("fullname").value;
-    var surname = document.getElementById("surname").value;
-    var phone = document.getElementById("phone").value;
-    var count_price = document.getElementById("count_price").value;   
-    if (fullname === "" || surname === "" || phone === "" || count_price === "") {
+    let fullname = document.getElementById("fullname").value;
+    let surname = document.getElementById("surname").value;
+    let phone = document.getElementById("phone").value;
+    let dates = document.getElementById("book-date").value;
+    let animals = document.getElementById("animals").value && document.getElementById("animals").value === 2
+    let comment = document.getElementById("client-comment").value
+    if (fullname === "" || surname === "" || phone === "" || dates === "") {
       console.log("Пожалуйста, заполните все поля формы.");
       return false;
     } else {
-        popup_activate()
-        console.log("wfwef");
+        let data = {
+            fullname: fullname,
+            surname: surname,
+            phone: phone,
+            dates: dates,
+            animals: animals,
+            comment: comment,
+        };
+
+        fetch('your-server-url', {
+            method: 'POST',
+            body: data
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.text();
+            })
+            .then(data => {
+                popup_activate()
+                console.log(data);
+            })
+            .catch(error => {
+                alert('Сталась помилка під час виконання запиту. Будь-ласка, перевірте правильність заповненних данних та спробуйте ще раз');
+                console.error('There was a problem with your fetch operation:', error);
+            });
       return true;
     }
 }
+
+function checkIsHoliday() {
+    let date = document.getElementById("book-date").value.toString()
+    let bookDate = date && date !== '' ? date : Date.now()
+    let currentDate = new Date(bookDate);
+    let currentDay = currentDate.getDay(); // Возвращает день недели (0 - воскресенье, 1 - понедельник, ..., 6 - суббота)
+
+    let isHoliday
+    if (currentDay >= 1 && currentDay <= 4) { // Понедельник - четверг
+        isHoliday = false
+    } else { // Пятница - воскресенье
+        isHoliday = true
+    }
+
+    return isHoliday;
+}
+
+function checkAnimals(){
+    let selectElement = document.getElementById("animals");
+    let selectedValue = selectElement.value;
+
+    let withAnimals
+    if (selectedValue === 1 ) {
+        withAnimals = false
+    } else {
+        withAnimals = true
+    }
+
+    return withAnimals
+}
+
+document.getElementById('book-date').addEventListener('change', function() {
+    calculatePrice()
+});
+
+document.getElementById('animals').addEventListener('change', function() {
+    calculatePrice()
+});
 
 document.addEventListener("DOMContentLoaded", function() {
     const peopleCount = document.getElementById("peopleCount");
@@ -94,24 +147,24 @@ document.addEventListener("DOMContentLoaded", function() {
     const removePersonBtn = document.getElementById("removePerson");
   
     let count = 4; 
-    updateCount();
+    // updateCount();
+    //
+    // function updateCount() {
+    //   peopleCount.textContent = count;
+    // }
 
-    function updateCount() {
-      peopleCount.textContent = count;
-    }
-
-    addPersonBtn.addEventListener("click", function() {
-      if (count < 6) {
-        count++;
-        updateCount();
-      }
-    });
+    // addPersonBtn.addEventListener("click", function() {
+    //   if (count < 6) {
+    //     count++;
+        //updateCount();
+    //  }
+    //});
   
-    removePersonBtn.addEventListener("click", function() {
-      if (count > 1) {
-        count--;
-        updateCount();
-      }
-    });
+    // removePersonBtn.addEventListener("click", function() {
+    //   if (count > 1) {
+    //     count--;
+        //updateCount();
+    //   }
+    // });
   });
   

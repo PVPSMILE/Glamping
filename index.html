@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./style.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
     <link rel="icon" href="/favicon.png">
     <title>Booking</title>
 </head>
@@ -12,9 +12,13 @@
     
     <form method="post" onsubmit="return false;">
         <header id="form-header">
-            <h1>Book it</h1>
+            <h1>Вітаємо!</h1>
+
         </header>
         <div class="form-fields">
+            <div class="preview">
+                <p>Для бронювання заповніть будь-ласка форму:</p>
+            </div>
             <div class="form-field">
                 <label for="">І'мя</label>
                 <input id="fullname" type="text" name="fullname" placeholder="Іван" required>
@@ -31,27 +35,35 @@
                 <!-- <p class="error">Enter the full phone number</p> -->
             </div>
             <div class="form-field">
-                <label for="people">Кількість людей</label>
-                <div class="count_people">
-                    <ion-icon id="removePerson"  name="remove-circle-outline"></ion-icon>
-                    <span id="peopleCount">4</span>
-                    <ion-icon id="addPerson" name="add-circle-outline"></ion-icon>
-                </div>       
+                <label for="animals">Буду з тваринкою</label>
+                <select id="animals">
+                    <option value="1">Ні</option>
+                    <option value="2">Так</option>
+                </select>
+<!--                <label for="people">Кількість людей</label>-->
+<!--                <div class="count_people">-->
+<!--                    <ion-icon id="removePerson"  name="remove-circle-outline"></ion-icon>-->
+<!--                    <span id="peopleCount">4</span>-->
+<!--                    <ion-icon id="addPerson" name="add-circle-outline"></ion-icon>-->
+<!--                </div>       -->
             </div>
             <div id="data" class="form-field">
                 <label for="">Дата перебування</label>
-                <input id="count_price" onchange="countPrice()" type="text" name="date" placeholder="З якого по яке" required>
-                <div class="price">
-                    <span>Ціна: 3000 x </span>
-                    <span id="price_out" > 1 день</span>
-                    <span>=</span>
-                    <span id="price_out2" >3000 грн.</span>
-                </div>
+                <input id="book-date" type="text" name="date" placeholder="Вкажіть дату" required>
                 <!-- <p class="error">Enter the right phone</p> -->
             </div>
 			<div id="comment" class="form-field">
                 <label for="">Коментрі</label>
-                <textarea class="" type="text" placeholder="Напиши щось, наприклад скільки людей, або напищіть свій інстаграм" name="" id="" cols="30" rows="10"></textarea>
+                <textarea class="" placeholder="Додаткові побажання" name="" id="client-comment" cols="30" rows="10"></textarea>
+            </div>
+            <div class="price-block">
+                <span>Вартість (з 9:00 до 21:00):</span>
+                <span id="price"> 2500 грн.</span>
+            </div>
+
+            <div class="terms_checkbox">
+                <input type="checkbox" id="accept_terms" name="accept_terms" required>
+                <label for="accept_terms">Я згоден з тим, що одночасно на території буде присутнім не більше 6 осіб (включаючи дітей), погоджуюсь надати завдаток у розмірі половини вартості</label>
             </div>
         </div>
             <button type="submit" id="submitBtn" class="buttone" onclick="validateForm()">
@@ -89,9 +101,9 @@
     </div>
 
 
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script type="module" src="https://cdn.jsdelivr.net/npm/ionicons@latest/dist/ionicons/ionicons.esm.js"></script>
-    <script nomodule src="https://cdn.jsdelivr.net/npm/ionicons@latest/dist/ionicons/ionicons.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
+    <script type="module" src="https://cdnjs.cloudflare.com/ajax/libs/ionicons/7.4.0/esm/ionicons.min.js"></script>
+    <script nomodule src="https://cdnjs.cloudflare.com/ajax/libs/ionicons/7.4.0/esm/ionicons.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

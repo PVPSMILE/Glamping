@@ -61,7 +61,7 @@ input, button{
     font-family: inherit;
 }
 
-input, textarea{
+input, textarea, select{
     outline-color: #3E708E;
     border-radius: 4px;
     border: 1px solid #ccc;
@@ -183,6 +183,20 @@ scale(1);
 }
 .price span{
     margin-left: 5px;
+}
+
+.preview{
+    width: 100%;
+}
+
+.price-block{
+    margin-bottom: 12px;
+}
+
+#price {
+    font-weight: bolder;
+    font-size: 18px;
+    color: darkblue;
 }
 
 @media (max-width: 576px) {

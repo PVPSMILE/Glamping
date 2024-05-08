@@ -100,7 +100,7 @@ function validateForm() {
 
         fetch('your-server-url', {
             method: 'POST',
-            body: data
+            body: JSON.stringify(data)
         })
             .then(response => {
                 if (!response.ok) {

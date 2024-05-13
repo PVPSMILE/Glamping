@@ -1,4 +1,6 @@
 calculatePrice()
+getBookingDates()
+
 var phoneInput = document.querySelector('.phone')
 phoneInput.addEventListener('keydown', function(event) {
    if( !(event.key == 'ArrowLeft' ||  event.key == 'ArrowRight' ||  event.key == 'Backspace' || event.key == 'Tab')) { event.preventDefault() }
@@ -23,17 +25,33 @@ phoneInput.addEventListener('keydown', function(event) {
     } 
 });
 
-flatpickr( "#book-date",{
-    //mode: "range",
-    minDate: "today",
-    dateFormat: "Y-m-d",
-    disable: [
-        {
-        from:"2024-04-11",
-        to:"2024-04-13"
-        }
-    ]    
-});
+function getBookingDates(){
+    fetch('http://localhost:8080/getBookings')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                const disabledDates = data.data.map(booking => booking.date_from);
+                flatpickr("#book-date", {
+                    minDate: "today",
+                    dateFormat: "Y-m-d",
+                    disable: disabledDates.map(date => ({
+                        from: date,
+                        to: date,
+                    }))
+                });
+            } else {
+                console.error('Ошибка получения данных');
+            }
+        })
+        .catch(error => {
+            console.error('Ошибка:', error);
+        });
+}
 
 function calculatePrice() {
     let price = 2500;
@@ -45,8 +63,6 @@ function calculatePrice() {
 
     let el_price = document.getElementById("price")
     el_price.innerHTML = (price+" грн.");
-
-    console.log(price)
 }
 
 const checkbox = document.getElementById('accept_terms');
@@ -74,7 +90,7 @@ function popup_activate (){
 function popup_deactivate (){
     popupBg.classList.remove('active');
     popup.classList.remove('active');
-
+    location.reload();
 }
 function validateForm() {
     let firstName = document.getElementById("first-name").value;
@@ -83,7 +99,7 @@ function validateForm() {
     let dates = document.getElementById("book-date").value;
     let animals = document.getElementById("animals").value && document.getElementById("animals").value === 2
     let comment = document.getElementById("client-comment").value
-    let price = document.getElementById("price").value
+    let price = document.getElementById("price").textContent.replace(/\D/gi, '')
     if (firstName === "" || surname === "" || phone === "" || dates === "") {
       console.log("Пожалуйста, заполните все поля формы.");
       return false;
@@ -98,23 +114,22 @@ function validateForm() {
             price: price,
         };
 
-        fetch('your-server-url', {
+        fetch('http://localhost:8080/booking', {
             method: 'POST',
             body: JSON.stringify(data)
         })
             .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.text();
+                return response.json(); // Обработка ответа как JSON
             })
             .then(data => {
-                popup_activate()
-                console.log(data);
+                if (data.success) {
+                    popup_activate();
+                } else {
+                    alert(`Сталась помилка: ${data.error_msg}`);
+                }
             })
             .catch(error => {
-                alert('Сталась помилка під час виконання запиту. Будь-ласка, перевірте правильність заповненних данних та спробуйте ще раз');
-                console.error('There was a problem with your fetch operation:', error);
+                alert('Сталась помилка під час виконання запиту. Будь-ласка, перевірте правильність заповненних даних та спробуйте ще раз');
             });
       return true;
     }
@@ -184,4 +199,8 @@ document.addEventListener("DOMContentLoaded", function() {
     //   }
     // });
   });
-  
+
+
+function clearFormData () {
+
+}

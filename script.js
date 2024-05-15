@@ -26,7 +26,7 @@ phoneInput.addEventListener('keydown', function(event) {
 });
 
 function getBookingDates(){
-    fetch('http://18.192.62.71:8080/api/getBookings')
+    fetch('https://loungespace.site/api/getBookings')
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -114,7 +114,7 @@ function validateForm() {
             price: price,
         };
 
-        fetch('http://18.192.62.71:8080/api/booking', {
+        fetch('https://loungespace.site/api/booking', {
             method: 'POST',
             body: JSON.stringify(data)
         })

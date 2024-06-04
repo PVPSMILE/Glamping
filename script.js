@@ -37,6 +37,17 @@ function getBookingDates(){
             if (data.success) {
                 const disabledDates = data.data.map(booking => booking.date_from);
                 flatpickr("#book-date", {
+                    locale: {
+                        firstDayOfWeek: 1,
+                        weekdays: {
+                            shorthand: ['Нд', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
+                            longhand: ['Неділя', 'Понеділок', 'Вівторок', 'Середа', 'Четвер', 'П’ятниця', 'Субота'],
+                        },
+                        months: {
+                            shorthand: ['Січ', 'Лют', 'Бер', 'Кві', 'Тра', 'Чер', 'Лип', 'Сер', 'Вер', 'Жов', 'Лис', 'Гру'],
+                            longhand: ['Січень', 'Лютий', 'Березень', 'Квітень', 'Травень', 'Червень', 'Липень', 'Серпень', 'Вересень', 'Жовтень', 'Листопад', 'Грудень'],
+                        },
+                    },
                     minDate: "today",
                     dateFormat: "Y-m-d",
                     disable: disabledDates.map(date => ({

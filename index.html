@@ -31,7 +31,7 @@
             </div>      
             <div class="form-field">
                 <label for="phone">Ваш номер</label>
-                <input class="phone" type="text" name="phone" id="phone" placeholder="+380(00)-000-00-00" required >
+                <input class="phone" type="text" name="phone" id="phone" placeholder="+380(00)-000-00-00" required>
                 <!-- <p class="error">Enter the full phone number</p> -->
             </div>
             <div class="form-field">
@@ -71,13 +71,19 @@
             </button> 
         <!-- POP_Up -->
     </form>
-    <div class="popup_bg" id="popup_bg">
-        <div class="popup" id="popup">
-            <h1>Дякуюємо за вибір</h1>
+    <div class="popup_bg active" id="popup_bg">
+        <div class="popup active" id="popup">
+            <h2>За вами попередньо заброньовано <span id="popup-book-date"></span></h1>
             <svg class="close-popup" onclick="popup_deactivate()" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#27485D" d="M23.954 21.03l-9.184-9.095 9.092-9.174-2.832-2.807-9.09 9.179-9.176-9.088-2.81 2.81 9.186 9.105-9.095 9.184 2.81 2.81 9.112-9.192 9.18 9.1z"/></svg>
-            <h2>4731 1856 1066 4481</h2>
-            <p>Для бронювання просимо внести половину від вартості відпочинку на карту протягом доби. Якщо цього не зробити ваше бронювання буде автоматично скасовано. </p>
-            <div class="callback">
+            <div class="booking-card-info">
+
+            </div>
+            <p style="margin-bottom: 0;">Для підтвердження вашого бронювання просимо внести частину суми у розмірі 1500грн на картку протягом доби. Якщо цього не зробити, ваше бронювання буде автоматично скасовано.</p>
+            <div class="card-info">
+                <h2 id="card-number" >4731 1856 1066 4481</h2>              
+                <svg class="copy-bankcard" onclick="copyCardNumber()" xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512"><rect x="128" y="128" width="336" height="336" rx="57" ry="57" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="50"/><path d="M383.5 128l.5-24a56.16 56.16 0 00-56-56H112a64.19 64.19 0 00-64 64v216a56.16 56.16 0 0056 56h24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="50"/></svg>                    
+            </div>
+           <div class="callback">
                 <a href="https://t.me/LoungeSpaceDp">
                     <div class="media telegram"><svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="70" height="70" viewBox="0 0 48 48">
                         <path fill="#29b6f6" d="M24,4C13,4,4,13,4,24s9,20,20,20s20-9,20-20S35,4,24,4z"></path><path fill="#fff" d="M34,15l-3.7,19.1c0,0-0.2,0.9-1.2,0.9c-0.6,0-0.9-0.3-0.9-0.3L20,28l-4-2l-5.1-1.4c0,0-0.9-0.3-0.9-1	c0-0.6,0.9-0.9,0.9-0.9l21.3-8.5c0,0,0.7-0.2,1.1-0.2c0.3,0,0.6,0.1,0.6,0.5C34,14.8,34,15,34,15z"></path><path fill="#b0bec5" d="M23,30.5l-3.4,3.4c0,0-0.1,0.1-0.3,0.1c-0.1,0-0.1,0-0.2,0l1-6L23,30.5z"></path><path fill="#cfd8dc" d="M29.9,18.2c-0.2-0.2-0.5-0.3-0.7-0.1L16,26c0,0,2.1,5.9,2.4,6.9c0.3,1,0.6,1,0.6,1l1-6l9.8-9.1	C30,18.7,30.1,18.4,29.9,18.2z"></path>

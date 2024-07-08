@@ -1,6 +1,14 @@
 calculatePrice()
 getBookingDates()
 
+function getValueOfDate() {
+    document.getElementById('popup-book-date').textContent = document.getElementById('book-date').value;
+}
+function copyCardNumber() {
+    const cardNumber = document.getElementById('card-number').textContent;
+
+    navigator.clipboard.writeText(cardNumber)
+}
 var phoneInput = document.querySelector('.phone')
 phoneInput.addEventListener('keydown', function(event) {
    if( !(event.key == 'ArrowLeft' ||  event.key == 'ArrowRight' ||  event.key == 'Backspace' || event.key == 'Tab')) { event.preventDefault() }
@@ -95,6 +103,7 @@ let openPopupButtons = document.querySelectorAll('.open-popup');
 let closePopupButton = document.querySelector('.close-popup');
 
 function popup_activate (){
+    getValueOfDate();
     popupBg.classList.add('active');
     popup.classList.add('active');
 }

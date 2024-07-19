@@ -73,7 +73,7 @@ function getBookingDates(){
 }
 
 function calculatePrice() {
-    let price = 2500;
+    let price = 3500;
     let isHoliday = checkIsHoliday()
     let withAnimals = checkAnimals()
 

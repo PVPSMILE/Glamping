@@ -117,7 +117,7 @@ function validateForm() {
     let surname = document.getElementById("surname").value;
     let phone = document.getElementById("phone").value;
     let dates = document.getElementById("book-date").value;
-    let animals = document.getElementById("animals").value && document.getElementById("animals").value === 2
+    let animals = document.getElementById("animals").value && document.getElementById("animals").value === "2"
     let comment = document.getElementById("client-comment").value
     let price = document.getElementById("price").textContent.replace(/\D/gi, '')
     if (firstName === "" || surname === "" || phone === "" || dates === "") {

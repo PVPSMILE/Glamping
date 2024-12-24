@@ -72,14 +72,26 @@ function getBookingDates(){
         });
 }
 
+function countPeople() {
+    const basePrice = 0;
+    const additionalPricePerPerson = 1000;
+    const peopleCountElement = document.getElementById("people").value;
+
+    if (peopleCountElement <= 2) {
+        return basePrice;
+    }
+    const totalPrice = basePrice + (peopleCountElement - 2) * additionalPricePerPerson;
+    return totalPrice;
+}
+
 function calculatePrice() {
     let price = 3500;
     let isHoliday = checkIsHoliday()
-    let withAnimals = checkAnimals()
+    // let withAnimals = checkAnimals()
 
-    price = isHoliday ? price+500 : price
-    price = withAnimals ? price+300 : price
-
+    price = price + countPeople() + isHoliday
+    // price = withAnimals ? price+300 : price
+    
     let el_price = document.getElementById("price")
     el_price.innerHTML = (price+" грн.");
 }
@@ -117,7 +129,9 @@ function validateForm() {
     let surname = document.getElementById("surname").value;
     let phone = document.getElementById("phone").value;
     let dates = document.getElementById("book-date").value;
-    let animals = document.getElementById("animals").value && document.getElementById("animals").value === "2"
+    // let animals = document.getElementById("animals").value && document.getElementById("animals").value === "2"
+    let animals = false
+    let peopleCount = document.getElementById("people").value
     let comment = document.getElementById("client-comment").value
     let price = document.getElementById("price").textContent.replace(/\D/gi, '')
     if (firstName === "" || surname === "" || phone === "" || dates === "") {
@@ -163,62 +177,38 @@ function checkIsHoliday() {
 
     let isHoliday
     if (currentDay >= 1 && currentDay <= 4) { // Понедельник - четверг
-        isHoliday = false
-    } else { // Пятница - воскресенье
-        isHoliday = true
+        isHoliday = 0
     }
-
+    else { // Пятница - воскресенье
+        isHoliday = 500
+    }
+    if ((bookDate >= "2024-12-25" && bookDate <= "2024-12-31") || (bookDate >= "2025-01-01" && bookDate <= "2025-01-10")) {
+        isHoliday = 2000;
+    }
     return isHoliday;
 }
 
-function checkAnimals(){
-    let selectElement = document.getElementById("animals");
-    let selectedValue = selectElement.value;
+// function checkAnimals(){
+//     let selectElement = document.getElementById("animals");
+//     let selectedValue = selectElement.value;
 
-    let withAnimals
-    if (selectedValue === "1" ) {
-        withAnimals = false
-    } else {
-        withAnimals = true
-    }
+//     let withAnimals
+//     if (selectedValue === "1" ) {
+//         withAnimals = false
+//     } else {
+//         withAnimals = true
+//     }
 
-    return withAnimals
-}
+//     return withAnimals
+// }
 
 document.getElementById('book-date').addEventListener('change', function() {
     calculatePrice()
 });
 
-document.getElementById('animals').addEventListener('change', function() {
+document.getElementById('people').addEventListener('change', function() {
     calculatePrice()
 });
-
-document.addEventListener("DOMContentLoaded", function() {
-    const peopleCount = document.getElementById("peopleCount");
-    const addPersonBtn = document.getElementById("addPerson");
-    const removePersonBtn = document.getElementById("removePerson");
-  
-    let count = 4; 
-    // updateCount();
-    //
-    // function updateCount() {
-    //   peopleCount.textContent = count;
-    // }
-
-    // addPersonBtn.addEventListener("click", function() {
-    //   if (count < 6) {
-    //     count++;
-        //updateCount();
-    //  }
-    //});
-  
-    // removePersonBtn.addEventListener("click", function() {
-    //   if (count > 1) {
-    //     count--;
-        //updateCount();
-    //   }
-    // });
-  });
 
 
 function clearFormData () {

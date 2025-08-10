@@ -56,6 +56,8 @@ function getBookingDates(){
                             longhand: ['Січень', 'Лютий', 'Березень', 'Квітень', 'Травень', 'Червень', 'Липень', 'Серпень', 'Вересень', 'Жовтень', 'Листопад', 'Грудень'],
                         },
                     },
+                    mode: 'range',
+                    locale: { rangeSeparator: " — " },
                     minDate: "today",
                     dateFormat: "Y-m-d",
                     disable: disabledDates.map(date => ({
@@ -75,10 +77,13 @@ function getBookingDates(){
 function countPeople() {
     const basePrice = 0;
     const additionalPricePerPerson = 1000;
-    const peopleCountElement = document.getElementById("people").value;
+    let peopleCountElement = document.getElementById("people").value;
 
     if (peopleCountElement <= 2) {
         return basePrice;
+    }
+    if (peopleCountElement > 4){
+        peopleCountElement = 4;
     }
     const totalPrice = basePrice + (peopleCountElement - 2) * additionalPricePerPerson;
     return totalPrice;
@@ -86,13 +91,13 @@ function countPeople() {
 
 function calculatePrice() {
     let price = 4000;
-    let isHoliday = checkIsHoliday()
+    let isHoliday = checkIsHoliday();
     // let withAnimals = checkAnimals()
 
-    price = price + countPeople() + isHoliday
+    price = price + countPeople() + isHoliday;
     // price = withAnimals ? price+300 : price
     
-    let el_price = document.getElementById("price")
+    let el_price = document.getElementById("price");
     el_price.innerHTML = (price+" грн.");
 }
 
@@ -129,6 +134,7 @@ function validateForm() {
     let surname = document.getElementById("surname").value;
     let phone = document.getElementById("phone").value;
     let dates = document.getElementById("book-date").value;
+    let [date_from, date_to] = dates.split(" — ");
     // let animals = document.getElementById("animals").value && document.getElementById("animals").value === "2"
     let animals = false
     let peopleCount = document.getElementById("people").value
@@ -142,7 +148,9 @@ function validateForm() {
             firstName: firstName,
             surname: surname,
             phone: phone,
-            dates: dates,
+            date_from: date_from,
+            date_to: date_to,
+            peopleCount: peopleCount,
             animals: animals,
             comment: comment,
             price: price,
@@ -162,30 +170,40 @@ function validateForm() {
                     alert(`Сталась помилка: ${data.error_msg}`);
                 }
             })
-            .catch(error => {
+            .catch(() => {
                 alert('Сталась помилка під час виконання запиту. Будь-ласка, перевірте правильність заповненних даних та спробуйте ще раз');
             });
       return true;
     }
 }
 
-function checkIsHoliday() {
-    let date = document.getElementById("book-date").value.toString()
-    let bookDate = date && date !== '' ? date : Date.now()
-    let currentDate = new Date(bookDate);
-    let currentDay = currentDate.getDay(); // Возвращает день недели (0 - воскресенье, 1 - понедельник, ..., 6 - суббота)
+function parseLocalDate(value) {
+    if (!value) return new Date();
+    const [y, m, d] = value.split('-').map(Number); // "YYYY-MM-DD" из flatpickr
+    return new Date(y, m - 1, d); // локальная дата без UTC-сдвигов
+}
 
-    let isHoliday
-    if (currentDay >= 1 && currentDay <= 4) { // Понедельник - четверг
-        isHoliday = 0
+function inMonthDayWindow(date, start, end) {
+    // start/end = [month, day], напр. [12,25]..[1,10]
+    const md = (date.getMonth() + 1) * 100 + date.getDate();
+    const s  = start[0] * 100 + start[1];
+    const e  = end[0]   * 100 + end[1];
+    return (s <= e) ? (md >= s && md <= e) : (md >= s || md <= e); // поддержка окна через Новый год
+}
+
+function checkIsHoliday() {
+    const val = document.getElementById("book-date").value.trim();
+    const bookDate = parseLocalDate(val);
+
+    const dow = bookDate.getDay(); // 0-вс .. 6-сб
+    let extra = (dow >= 1 && dow <= 4) ? 0 : 500; // пн-чт: 0, пт-вс: 500
+
+    // Новогодний период без хардкода года: 25.12–10.01
+    if (inMonthDayWindow(bookDate, [12, 25], [1, 10])) {
+        extra = 2000;
     }
-    else { // Пятница - воскресенье
-        isHoliday = 500
-    }
-    if ((bookDate >= "2024-12-25" && bookDate <= "2024-12-31") || (bookDate >= "2025-01-01" && bookDate <= "2025-01-10")) {
-        isHoliday = 2000;
-    }
-    return isHoliday;
+
+    return extra;
 }
 
 // function checkAnimals(){

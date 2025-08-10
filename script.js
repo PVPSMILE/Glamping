@@ -134,7 +134,7 @@ function validateForm() {
     let surname = document.getElementById("surname").value;
     let phone = document.getElementById("phone").value;
     let dates = document.getElementById("book-date").value;
-    let [date_from, date_to] = dates.split(" — ");
+    let [dateFrom, dateTo] = dates.split(" — ");
     // let animals = document.getElementById("animals").value && document.getElementById("animals").value === "2"
     let animals = false
     let peopleCount = document.getElementById("people").value
@@ -148,9 +148,9 @@ function validateForm() {
             firstName: firstName,
             surname: surname,
             phone: phone,
-            date_from: date_from,
-            date_to: date_to,
-            peopleCount: peopleCount,
+            dateFrom: dateFrom,
+            dateTo: dateTo,
+            touristCount: peopleCount,
             animals: animals,
             comment: comment,
             price: price,

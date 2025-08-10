@@ -58,9 +58,9 @@ function getBookingDates(){
                             shorthand: ['Січ', 'Лют', 'Бер', 'Кві', 'Тра', 'Чер', 'Лип', 'Сер', 'Вер', 'Жов', 'Лис', 'Гру'],
                             longhand: ['Січень', 'Лютий', 'Березень', 'Квітень', 'Травень', 'Червень', 'Липень', 'Серпень', 'Вересень', 'Жовтень', 'Листопад', 'Грудень'],
                         },
+                        rangeSeparator: " — "
                     },
                     mode: 'range',
-                    locale: { rangeSeparator: " — " },
                     minDate: "today",
                     dateFormat: "Y-m-d",
                     disable: disabledDates,
@@ -89,16 +89,49 @@ function countPeople() {
     return totalPrice;
 }
 
-function calculatePrice() {
-    let price = 4000;
-    let isHoliday = checkIsHoliday();
-    // let withAnimals = checkAnimals()
+function getNights() {
+    const val = (document.getElementById("book-date").value || "").trim();
+    if (!val) return 1;
 
-    price = price + countPeople() + isHoliday;
-    // price = withAnimals ? price+300 : price
-    
-    let el_price = document.getElementById("price");
-    el_price.innerHTML = (price+" грн.");
+    const [sFrom, sToRaw] = val.split(" — ").map(s => s && s.trim());
+    if (!sFrom) return 1;
+    if (!sToRaw) return 1; // выбрана только стартовая дата → 1 ночь
+
+    // парсим как UTC (без DST)
+    const toUTC = (s) => {
+        const [y, m, d] = s.split("-").map(Number);
+        return Date.UTC(y, m - 1, d);
+    };
+
+    let from = toUTC(sFrom);
+    let to   = toUTC(sToRaw);
+
+    // на всякий: если даты перепутаны — меняем местами
+    if (to < from) [from, to] = [to, from];
+
+    const days = Math.floor((to - from) / 86400000);
+    return days + 1; // включительно
+}
+
+
+function calculatePrice() {
+    const basePerNight = 4000;            // базовая цена за ночь
+    const peopleSurcharge = countPeople(); // надбавка за ночь
+    const holidaySurcharge = checkIsHoliday(); // надбавка за ночь (число)
+    const nights = getNights();
+
+    let perNight = basePerNight + peopleSurcharge + holidaySurcharge;
+    let total = perNight * nights;
+
+    // если нужна разовая доплата за животных — раскомментируй:
+    // if (checkAnimals()) total += 300;
+
+    const elPrice = document.getElementById("price");
+    elPrice.textContent = total.toLocaleString('uk-UA') + " грн.";
+    const elPerNight = document.getElementById("nights-count");
+    elPerNight.textContent = ("Ночей: ") + nights;
+    console.log(`Цена за ночь: ${perNight.toLocaleString('uk-UA')} грн.`);
+    console.log(`ночь: ${nights} грн.`);
 }
 
 const checkbox = document.getElementById('accept_terms');
@@ -192,18 +225,55 @@ function inMonthDayWindow(date, start, end) {
 }
 
 function checkIsHoliday() {
-    const val = document.getElementById("book-date").value.trim();
-    const bookDate = parseLocalDate(val);
+    const val = (document.getElementById("book-date").value || "").trim();
+    if (!val) return 0;
 
-    const dow = bookDate.getDay(); // 0-вс .. 6-сб
-    let extra = (dow >= 1 && dow <= 4) ? 0 : 500; // пн-чт: 0, пт-вс: 500
+    const [sFrom, sToRaw] = val.split(" — ").map(s => s && s.trim());
+    if (!sFrom) return 0;
+    const sTo = sToRaw || sFrom;
 
-    // Новогодний период без хардкода года: 25.12–10.01
-    if (inMonthDayWindow(bookDate, [12, 25], [1, 10])) {
-        extra = 2000;
+    // UTC-даты
+    const toUTCDate = (s) => {
+        const [y, m, d] = s.split("-").map(Number);
+        return new Date(Date.UTC(y, m - 1, d));
+    };
+
+    let from = toUTCDate(sFrom);
+    let to   = toUTCDate(sTo);
+    if (to < from) [from, to] = [to, from];
+
+    let totalExtra = 0;
+
+    // перебор дней включительно
+    for (let d = new Date(from); d <= to; d.setUTCDate(d.getUTCDate() + 1)) {
+        // Новогоднее окно 25.12–10.01 любого года
+        if (inMonthDayWindowUTC(d, [12, 25], [1, 10])) {
+            totalExtra += 2000;
+            continue;
+        }
+
+        const dow = d.getUTCDay(); // 0-вс..6-сб
+        if (dow === 5 || dow === 6 || dow === 0) {
+            totalExtra += 500; // пт/сб/вс
+        }
     }
 
-    return extra;
+    return totalExtra;
+}
+
+// Вариант month-day окна в UTC (если у тебя не было готового):
+function inMonthDayWindowUTC(dateUTC, startMD, endMD) {
+    // startMD/endMD = [месяц, день]
+    const m = dateUTC.getUTCMonth() + 1;
+    const d = dateUTC.getUTCDate();
+    const md = m * 100 + d;
+
+    const s = startMD[0] * 100 + startMD[1];
+    const e = endMD[0]   * 100 + endMD[1];
+
+    // окно может «переламывать» год (декабрь → январь)
+    if (s <= e) return md >= s && md <= e;
+    return md >= s || md <= e;
 }
 
 // function checkAnimals(){
@@ -228,7 +298,10 @@ document.getElementById('people').addEventListener('change', function() {
     calculatePrice()
 });
 
-
-function clearFormData () {
-
-}
+window.addEventListener('pageshow', function (e) {
+    if (e.persisted) {
+        const u = new URL(window.location.href);
+        u.searchParams.set('bf', Date.now());
+        window.location.replace(u.toString());
+    }
+});

@@ -43,7 +43,10 @@ function getBookingDates(){
         })
         .then(data => {
             if (data.success) {
-                const disabledDates = data.data.map(booking => booking.date_from);
+                const disabledDates = data.data.map(booking => ({
+                    from: booking.date_from,
+                    to: booking.date_to
+                }));
                 flatpickr("#book-date", {
                     locale: {
                         firstDayOfWeek: 1,
@@ -60,10 +63,7 @@ function getBookingDates(){
                     locale: { rangeSeparator: " — " },
                     minDate: "today",
                     dateFormat: "Y-m-d",
-                    disable: disabledDates.map(date => ({
-                        from: date,
-                        to: date,
-                    }))
+                    disable: disabledDates,
                 });
             } else {
                 console.error('Ошибка получения данных');

@@ -117,11 +117,11 @@ function getNights() {
 function calculatePrice() {
     const basePerNight = 4000;            // базовая цена за ночь
     const peopleSurcharge = countPeople(); // надбавка за ночь
-    const holidaySurcharge = checkIsHoliday(); // надбавка за ночь (число)
+    const holidayExtraTotal  = checkIsHoliday(); // надбавка за ночь (число)
     const nights = getNights();
 
-    let perNight = basePerNight + peopleSurcharge + holidaySurcharge;
-    let total = perNight * nights;
+    let perNight = basePerNight + peopleSurcharge;
+    let total = perNight * nights + holidayExtraTotal;
 
     // если нужна разовая доплата за животных — раскомментируй:
     // if (checkAnimals()) total += 300;
@@ -129,9 +129,8 @@ function calculatePrice() {
     const elPrice = document.getElementById("price");
     elPrice.textContent = total.toLocaleString('uk-UA') + " грн.";
     const elPerNight = document.getElementById("nights-count");
-    elPerNight.textContent = ("Ночей: ") + nights;
-    console.log(`Цена за ночь: ${perNight.toLocaleString('uk-UA')} грн.`);
-    console.log(`ночь: ${nights} грн.`);
+    elPerNight.textContent = `(Ночей: ${nights})`;
+
 }
 
 const checkbox = document.getElementById('accept_terms');

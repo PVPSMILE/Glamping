@@ -10,6 +10,19 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
     <link rel="icon" href="img/favicon.png" type="image/x-icon">
     <title>LoungeSpace</title>
+    <script>
+        (function () {
+            var ua = navigator.userAgent.toLowerCase();
+            var isIAB = ua.includes('instagram') || ua.includes('fb_iab') || ua.includes('fbav');
+            if (!isIAB) return;
+
+            var url = new URL(location.href);
+            if (!url.searchParams.has('ig_nocache')) {
+                url.searchParams.set('ig_nocache', Date.now());
+                location.replace(url.toString()); // однократный перезаход с bust-параметром
+            }
+        })();
+    </script>
 </head>
 <body>
     <div class="wrapper">

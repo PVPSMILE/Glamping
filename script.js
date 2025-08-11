@@ -167,6 +167,7 @@ function validateForm() {
     let phone = document.getElementById("phone").value;
     let dates = document.getElementById("book-date").value;
     let [dateFrom, dateTo] = dates.split(" — ");
+    dateTo = dateTo ? dateTo : dateFrom;
     // let animals = document.getElementById("animals").value && document.getElementById("animals").value === "2"
     let animals = false
     let peopleCount = document.getElementById("people").value

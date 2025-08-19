@@ -64,6 +64,13 @@ function getBookingDates(){
                     minDate: "today",
                     dateFormat: "Y-m-d",
                     disable: disabledDates,
+                    onClose: function (selectedDates, _dateStr, instance) {
+                        if (selectedDates.length === 1) {
+                            const d = selectedDates[0];
+                            // превращаем одиночный выбор в [d, d]
+                            instance.setDate([d, d], true); // вторым аргументом триггерим форматирование и input
+                        }
+                    },
                 });
             } else {
                 console.error('Ошибка получения данных');

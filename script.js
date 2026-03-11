@@ -85,7 +85,7 @@ function countPeople() {
 }
 
 function calculatePrice() {
-    let price = 4000;
+    let price = 4500;
     let isHoliday = checkIsHoliday()
     // let withAnimals = checkAnimals()
 

@@ -122,7 +122,7 @@ function getNights() {
 
 
 function calculatePrice() {
-    const basePerNight = 4000;            // базовая цена за ночь
+    const basePerNight = 4500;            // базовая цена за ночь
     const peopleSurcharge = countPeople(); // надбавка за ночь
     const holidayExtraTotal  = checkIsHoliday(); // надбавка за ночь (число)
     const nights = getNights();

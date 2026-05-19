@@ -34,7 +34,7 @@ phoneInput.addEventListener('keydown', function(event) {
 });
 
 function getBookingDates(){
-    fetch('https://loungespace.site/api/getBookings')
+    fetch('https://loungespace.com.ua/api/getBookings')
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -196,7 +196,7 @@ function validateForm() {
             price: price,
         };
 
-        fetch('https://loungespace.site/api/booking', {
+        fetch('https://loungespace.com.ua/api/booking', {
             method: 'POST',
             body: JSON.stringify(data)
         })
